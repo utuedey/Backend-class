@@ -90,3 +90,63 @@ async def delete_book(book_id: int):
 # (No body usually required)
 # You'll get: {"message":"Book 2 deleted successfully!"}
 # Now, if you try to GET http://127.0.0.1:8000/books/2, you'll get the "Book not found" error.
+
+# ASSIGNMENT_1
+jss_1_stud = {
+    1: {"name" :  "Ofinni", "surname" : "Emmanuel", "position" : "first" },
+    2: {"name" : "Praise", "surname" : "Obaoluwa", "position" : "second"},
+    3: {"name" : "Desiree", "surname" : "Mustapha", "position" : "third"},
+    4: {"name" : "Emmanuel", "surname" : "Isiaka", "position" : "fourth"},
+    5: {"name" : "Deborah", "surname" : "Apata", "position" : "fifth"},
+}
+
+position_index = 6
+
+@app.get("/jss1")
+async def results():
+    return jss_1_stud     #returns the whole class results
+
+@app.get("/jss1/{position}")
+async def get_position(position: int):
+    """Returns specific positions and their holders"""
+    if position not in jss_1_stud:     #Ensures the position is within available range
+        return {"error": "position not found", "status_code": 404}
+    return jss_1_stud[position]  #Returns specific positions
+
+@app.post("/jss1/newresult")
+async def extra_result(name: str, surname: str, position: str):
+    """Adds a new result to the list """
+    global position_index
+    new_result = {"name": name, "surname": surname, "position": f"{position_index}th"}
+    jss_1_stud[position_index] = new_result
+    new_position = position_index
+    position_index += 1
+    return {"message": "New result uploaded", "position index" : new_position, "info" : new_result}
+
+@app.put("/jss1/{position_index}")
+async def updated_result(position_index: int, name: str, surname: str):
+    """Updates an existing result"""
+
+    if position_index not in jss_1_stud:
+        return {"message":  "position out of range", "error" : "404"}
+    if position_index == 1:
+        suf = "st"
+    elif position_index == 2:
+        suf = "nd"
+    elif position_index == 3:
+        suf = "rd"
+    else:
+        suf = "th"
+    jss_1_stud[position_index] = {"name": name, "surname": surname, "position": f"{position_index}{suf}"}
+
+    return {"message": f"{position_index}{suf} position updated", "details": jss_1_stud[position_index] }
+   
+   
+@app.delete("/jss1/{position_index}")
+async def delete_result(position_index: int):
+    """Deletes a specific result by its position index"""
+    if position_index not in jss_1_stud:
+        return {"message": "position is out of range", "error": "404"}
+    
+    del jss_1_stud[position_index]
+    return {"message" : "Successfully deleted the result"}
