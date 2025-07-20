@@ -114,7 +114,7 @@ async def get_position(position: int):
     return jss_1_stud[position]  #Returns specific positions
 
 @app.post("/jss1/newresult")
-async def extra_result(name: str, surname: str, position: str):
+async def extra_result(name: str, surname: str):
     """Adds a new result to the list """
     global position_index
     new_result = {"name": name, "surname": surname, "position": f"{position_index}th"}
